@@ -28,8 +28,16 @@ class ViewController: UIViewController {
         interstitial.load(GADRequest())
         
         //reward-based video ad
-        //rewarded = GADRewardedAd(adUnitID: "ca-app-pub-7142967589737903/2420773614")
+        rewarded = GADRewardedAd(adUnitID: "ca-app-pub-7142967589737903/2420773614")
         
+        DispatchQueue.main.async {
+            do {
+                try self.rewarded.canPresent(fromRootViewController: self)
+            } catch let error as NSError {
+                print(error.localizedDescription)
+            }
+            
+        }
         
     }
     
@@ -149,9 +157,7 @@ extension ViewController: GADRewardedAdDelegate {
    func rewardedAdDidPresent(_ rewardedAd: GADRewardedAd) {
      print("Rewarded ad presented.")
     
-     rewarded.load(GADRequest()) { (error) in
-        print(error?.localizedDescription as Any)
-     }
+     rewarded.load(GADRequest())
    }
 
    func rewardedAd(_ rewardedAd: GADRewardedAd, didFailToPresentWithError error: Error) {
