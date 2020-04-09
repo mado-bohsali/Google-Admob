@@ -13,32 +13,30 @@ class ViewController: UIViewController {
     var interstitial: GADInterstitial!
     var rewarded: GADRewardedAd!
     var count:Int = 0
+    @IBOutlet weak var countRewardLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         //displays banner ad
         banner = GADBannerView(adSize: kGADAdSizeBanner)
-        banner.adUnitID = "ca-app-pub-7142967589737903/2607835245"
+        banner.adUnitID = "ca-app-pub-3940256099942544/2934735716"
         banner.rootViewController = self
         addBannerToView(banner)
         
         //displays 1 interstitial ad for 1-time-use
-        interstitial = GADInterstitial(adUnitID: "ca-app-pub-7142967589737903/5576779368")
+        interstitial = GADInterstitial(adUnitID: "ca-app-pub-3940256099942544/4411468910")
         interstitial.load(GADRequest())
         
         //reward-based video ad
-        rewarded = GADRewardedAd(adUnitID: "ca-app-pub-7142967589737903/2420773614")
-        
+        rewarded = GADRewardedAd(adUnitID: "ca-app-pub-3940256099942544/1712485313")
         DispatchQueue.main.async {
             do {
                 try self.rewarded.canPresent(fromRootViewController: self)
             } catch let error as NSError {
                 print(error.localizedDescription)
             }
-            
         }
-        
     }
     
     // MARK: Ads configuration (programmatically)
@@ -46,7 +44,7 @@ class ViewController: UIViewController {
     func addBannerToView(_ bannerView: GADBannerView){
         bannerView.translatesAutoresizingMaskIntoConstraints = false //intrinsic content size to size the view
         view.addSubview(bannerView)
-        view.addConstraints([NSLayoutConstraint(item: bannerView, attribute: .bottom, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .top, multiplier: 1, constant: 0),
+        view.addConstraints([NSLayoutConstraint(item: bannerView, attribute: .bottom, relatedBy: .equal, toItem: view.safeAreaLayoutGuide, attribute: .bottom, multiplier: 1, constant: 0),
                              NSLayoutConstraint(item: bannerView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1, constant: 0)])
     }
 
@@ -72,10 +70,6 @@ class ViewController: UIViewController {
             //check rewardBasedVideoDidClose - load request
             rewarded.present(fromRootViewController: self, delegate: self)
         }
-        
-        
-        
-        //
     }
     
 }
@@ -151,13 +145,12 @@ extension ViewController:GADInterstitialDelegate {
 
 extension ViewController: GADRewardedAdDelegate {
     func rewardedAd(_ rewardedAd: GADRewardedAd, userDidEarn reward: GADAdReward) {
-        
+        countRewardLabel.text?.append("\(reward.amount)")
     }
     
    func rewardedAdDidPresent(_ rewardedAd: GADRewardedAd) {
      print("Rewarded ad presented.")
     
-     rewarded.load(GADRequest())
    }
 
    func rewardedAd(_ rewardedAd: GADRewardedAd, didFailToPresentWithError error: Error) {
