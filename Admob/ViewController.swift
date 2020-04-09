@@ -8,6 +8,7 @@
 import UIKit
 import GoogleMobileAds
 
+//Root controller handling all ad types
 class ViewController: UIViewController {
     var banner: GADBannerView!
     var interstitial: GADInterstitial!
