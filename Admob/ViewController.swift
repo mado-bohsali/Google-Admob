@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     var banner: GADBannerView!
     var interstitial: GADInterstitial!
     var rewarded: GADRewardedAd!
-    
+    var count:Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,6 +26,10 @@ class ViewController: UIViewController {
         //displays 1 interstitial ad for 1-time-use
         interstitial = GADInterstitial(adUnitID: "ca-app-pub-7142967589737903/5576779368")
         interstitial.load(GADRequest())
+        
+        //reward-based video ad
+        //rewarded = GADRewardedAd(adUnitID: "ca-app-pub-7142967589737903/2420773614")
+        
         
     }
     
@@ -56,6 +60,14 @@ class ViewController: UIViewController {
     
     @IBAction func rewardedTriggered(_ sender: Any) {
         
+        if rewarded.isReady {
+            //check rewardBasedVideoDidClose - load request
+            rewarded.present(fromRootViewController: self, delegate: self)
+        }
+        
+        
+        
+        //
     }
     
 }
@@ -126,6 +138,28 @@ extension ViewController:GADInterstitialDelegate {
     /// (such as the App Store), backgrounding the current app.
     func interstitialWillLeaveApplication(_ ad: GADInterstitial) {
       print("interstitialWillLeaveApplication")
+    }
+}
+
+extension ViewController: GADRewardedAdDelegate {
+    func rewardedAd(_ rewardedAd: GADRewardedAd, userDidEarn reward: GADAdReward) {
+        
+    }
+    
+   func rewardedAdDidPresent(_ rewardedAd: GADRewardedAd) {
+     print("Rewarded ad presented.")
+    
+     rewarded.load(GADRequest()) { (error) in
+        print(error?.localizedDescription as Any)
+     }
+   }
+
+   func rewardedAd(_ rewardedAd: GADRewardedAd, didFailToPresentWithError error: Error) {
+     print("Rewarded ad failed to present.")
+   }
+    
+    func rewardedAdDidDismiss(_ rewardedAd: GADRewardedAd) {
+        print("Rewarded ad dismissed")
     }
 }
 
